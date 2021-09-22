@@ -1,6 +1,7 @@
 import fs from "fs";
 import PoChecker from "../lib/checks/po/po.js";
 import Log from "../lib/log.js";
+import ConsoleTableLogFormatter from "../lib/logFormatters/console-table.js";
 
 function getConfiguration() {
   const configPath = "config.json";
@@ -21,7 +22,9 @@ function main() {
   }, config.poCheck);
 
   poCheck.startCheck();
-  console.log(poCheckLog._log);
+
+  const formatter = new ConsoleTableLogFormatter();
+  formatter.format(poCheckLog);
 }
 
 main();

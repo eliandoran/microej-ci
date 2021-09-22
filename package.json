@@ -14,6 +14,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "fast-glob": "^3.2.7",
-    "gettext-parser": "^4.0.4"
+    "gettext-parser": "^4.0.4",
+    "table": "^6.7.1"
   }
 }
