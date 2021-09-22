@@ -13,7 +13,7 @@ function main() {
     baseDir: config.baseDir
   };
 
-  const poCheck = new PoChecker(context);
+  const poCheck = new PoChecker(context, config.poCheck);
   poCheck.startCheck();
 }
 
