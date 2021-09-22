@@ -23,7 +23,7 @@ function main() {
 
   poCheck.startCheck();
 
-  const formatter = new ConsoleTableLogFormatter();
+  const formatter = new ConsoleTableLogFormatter(context);
   formatter.format(poCheckLog);
 }
 
