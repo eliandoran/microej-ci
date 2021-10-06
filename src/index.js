@@ -51,7 +51,9 @@ function main() {
 
   // Format and display the output.
   const formatter = new GitHubWorkflowFormatter(context);
+  //const formatter = new ConsoleTableLogFormatter(context);
   formatter.format(poCheckLog);
+  formatter.beforeExit();
 }
 
 main();
