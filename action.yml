@@ -1,0 +1,5 @@
+name: "MicroEJ Check"
+description: "Custom-made tool to help automate some development tasks in the MicroEJ platform"
+runs:
+  using: docker
+  image: Dockerfile
