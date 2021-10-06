@@ -1,7 +1,8 @@
 FROM node:alpine
 
 # Install dependencies
-COPY ./package* .
+COPY ./package* ./
 RUN npm install
 
+COPY ./ ./
 ENTRYPOINT [ "/entrypoint.sh" ]
