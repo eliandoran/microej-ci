@@ -4,6 +4,7 @@ import path from "path";
 import PoChecker from "../lib/checks/po/po.js";
 import Log from "../lib/log.js";
 import ConsoleTableLogFormatter from "../lib/logFormatters/console-table.js";
+import GitHubWorkflowFormatter from "../lib/logFormatters/github-workflow.js";
 
 function getConfiguration(baseDir) {
   const configPath = path.join(baseDir, ".microej_check");
@@ -49,7 +50,7 @@ function main() {
   poCheck.startCheck();
 
   // Format and display the output.
-  const formatter = new ConsoleTableLogFormatter(context);
+  const formatter = new GitHubWorkflowFormatter(context);
   formatter.format(poCheckLog);
 }
 
