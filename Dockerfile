@@ -1,3 +1,7 @@
-FROM alpine:3.10
-COPY entrypoint.sh /entrypoint.sh
+FROM node:alpine
+
+# Install dependencies
+COPY ./package* .
+RUN npm install
+
 ENTRYPOINT [ "/entrypoint.sh" ]

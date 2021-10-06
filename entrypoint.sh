@@ -1,3 +1,2 @@
 #!/bin/sh -l
-cd $GITHUB_WORKSPACE
-ls -al
+npm run start $GITHUB_WORKSPACE
