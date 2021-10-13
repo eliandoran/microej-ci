@@ -3,3 +3,8 @@ description: "Custom-made tool to help automate some development tasks in the Mi
 runs:
   using: docker
   image: Dockerfile
+inputs:
+  config:
+    description: "The path of a JSON configuration file, relative to the project root."
+    required: false
+    default: "./.microej_check"
