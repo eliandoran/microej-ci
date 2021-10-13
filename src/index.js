@@ -6,8 +6,7 @@ import Log from "../lib/log.js";
 import ConsoleTableLogFormatter from "../lib/logFormatters/console-table.js";
 import GitHubWorkflowFormatter from "../lib/logFormatters/github-workflow.js";
 
-function getConfiguration(baseDir) {
-  const configPath = path.join(baseDir, ".microej_check");
+function getConfiguration(baseDir, configPath) {
   const fileContent = fs.readFileSync(configPath).toString("utf-8");
   const config = JSON.parse(fileContent);
   config.baseDir = baseDir;
@@ -16,21 +15,31 @@ function getConfiguration(baseDir) {
 
 function showUsage() {
   console.info("MicroEJ Checker");
-  console.info(`Usage: ${process.argv[0]} ${process.argv[1]} project_directory`);
+  console.info(`Usage: ${process.argv[0]} ${process.argv[1]} project_directory [config_file]`);
 }
 
 function main() {
   // Check command line arguments.
-  if (process.argv.length !== 3) {
+  if (process.argv.length < 3 || process.argv.length > 4) {
     showUsage();
     return;
   }
 
-  // Try reading the configuration file.
-  const baseDir = process.argv[2];
+  // Determine configuration file path.
+  const baseDir = process.argv[2];  
+  let configPath = ".microej_check";
+
+  if (process.argv.length == 4) {
+    configPath = process.argv[3];
+  }
+
+  configPath = path.resolve(baseDir, configPath);
+  console.log(`Using configuration file: ${configPath}`);
+
+  // Try reading the configuration file.  
   let config;
   try {
-    config = getConfiguration(baseDir)
+    config = getConfiguration(baseDir, configPath);
   } catch (e) {
     console.log(`Unable to load configuration file: ${e.message}`);
     return;
