@@ -18,6 +18,16 @@ function showUsage() {
   console.info(`Usage: ${process.argv[0]} ${process.argv[1]} project_directory [config_file]`);
 }
 
+function getFormatter(context) {
+  // If running under GitHub Actions, use the corresponding format.
+  if (process.env["GITHUB_RUN_ID"]) {
+    return new GitHubWorkflowFormatter(context);
+  }
+
+  // Otherwise, use the more friendlier console version.
+  return new ConsoleTableLogFormatter(context);
+}
+
 function main() {
   // Check command line arguments.
   if (process.argv.length < 3 || process.argv.length > 4) {
@@ -59,8 +69,7 @@ function main() {
   poCheck.startCheck();
 
   // Format and display the output.
-  const formatter = new GitHubWorkflowFormatter(context);
-  //const formatter = new ConsoleTableLogFormatter(context);
+  const formatter = getFormatter(context);
   formatter.format(poCheckLog);
   formatter.beforeExit();
 }
