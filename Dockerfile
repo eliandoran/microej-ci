@@ -7,4 +7,4 @@ COPY ./package* ./
 RUN npm install
 
 COPY ./ ./
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/home/node/app/entrypoint.sh" ]
