@@ -5,7 +5,7 @@ import PoChecker from "../lib/checks/po/po.js";
 import Log from "../lib/log.js";
 import ConsoleTableLogFormatter from "../lib/logFormatters/console-table.js";
 import GitHubWorkflowFormatter from "../lib/logFormatters/github-workflow.js";
-import getProjectStructure from "../lib/helpers/project-structure.js";
+import parseProjects from "../lib/helpers/index.js";
 
 function getConfiguration(baseDir, configPath) {
   const fileContent = fs.readFileSync(configPath).toString("utf-8");
@@ -69,10 +69,10 @@ function main() {
 
   poCheck.startCheck();*/
 
-  getProjectStructure({
+  parseProjects({
     baseDir: config.baseDir,
     log: poCheckLog
-  });
+  }, config);
 
   // Format and display the output.
   const formatter = getFormatter(context);
