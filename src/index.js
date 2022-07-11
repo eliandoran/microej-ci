@@ -69,10 +69,11 @@ function main() {
 
   poCheck.startCheck();*/
 
-  parseProjects({
+  const projects = parseProjects({
     baseDir: config.baseDir,
     log: poCheckLog
   }, config);
+  console.log(JSON.stringify(projects, null, 4));
 
   // Format and display the output.
   const formatter = getFormatter(context);
