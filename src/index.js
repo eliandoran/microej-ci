@@ -73,7 +73,7 @@ function main() {
     baseDir: config.baseDir,
     log: poCheckLog
   }, config);
-  console.log(JSON.stringify(projects, null, 4));
+  //console.log(JSON.stringify(projects, null, 4));
 
   // Format and display the output.
   const formatter = getFormatter(context);
