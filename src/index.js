@@ -5,7 +5,7 @@ import PoChecker from "../lib/checks/po/po.js";
 import Log from "../lib/log.js";
 import ConsoleTableLogFormatter from "../lib/logFormatters/console-table.js";
 import GitHubWorkflowFormatter from "../lib/logFormatters/github-workflow.js";
-import parseProjects from "../lib/helpers/index.js";
+import ServiceResourceChecker from "../lib/helpers/index.js";
 
 function getConfiguration(baseDir, configPath) {
   const fileContent = fs.readFileSync(configPath).toString("utf-8");
@@ -69,10 +69,13 @@ function main() {
 
   poCheck.startCheck();*/
 
-  const projects = parseProjects({
+  const projects = new ServiceResourceChecker({
     baseDir: config.baseDir,
     log: poCheckLog
   }, config);
+
+  projects.startCheck();
+
   //console.log(projects);
 
   // Format and display the output.
