@@ -72,7 +72,7 @@ function main() {
   const projects = new ServiceResourceChecker({
     baseDir: config.baseDir,
     log: poCheckLog
-  }, config);
+  }, config.serviceCheck);
 
   projects.startCheck();
 
