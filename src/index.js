@@ -6,6 +6,7 @@ import Log from "../lib/log.js";
 import ConsoleTableLogFormatter from "../lib/logFormatters/console-table.js";
 import GitHubWorkflowFormatter from "../lib/logFormatters/github-workflow.js";
 import ServiceResourceChecker from "../lib/helpers/index.js";
+import { time, timeEnd } from "console";
 
 function getConfiguration(baseDir, configPath) {
   const fileContent = fs.readFileSync(configPath).toString("utf-8");
@@ -74,7 +75,9 @@ function main() {
     log: poCheckLog
   }, config.serviceCheck);
 
+  time("[ServiceResourceChecker]");
   projects.startCheck();
+  timeEnd("[ServiceResourceChecker]");
 
   //console.log(projects);
 
