@@ -5,7 +5,7 @@ import PoChecker from "../lib/checks/po/po.js";
 import Log from "../lib/log.js";
 import ConsoleTableLogFormatter from "../lib/logFormatters/console-table.js";
 import GitHubWorkflowFormatter from "../lib/logFormatters/github-workflow.js";
-import ServiceResourceChecker from "../lib/helpers/index.js";
+import ServiceResourceChecker from "../lib/checks/services/index.js";
 import { time, timeEnd } from "console";
 
 function getConfiguration(baseDir, configPath) {
