@@ -7,6 +7,7 @@ import ConsoleTableLogFormatter from "../lib/logFormatters/console-table.js";
 import GitHubWorkflowFormatter from "../lib/logFormatters/github-workflow.js";
 import ServiceResourceChecker from "../lib/checks/services/index.js";
 import { time, timeEnd } from "console";
+import parseJavaProjects from "../lib/parsers/java/index.js";
 
 function getConfiguration(baseDir, configPath) {
   const fileContent = fs.readFileSync(configPath).toString("utf-8");
@@ -30,6 +31,25 @@ function getFormatter(context) {
   return new ConsoleTableLogFormatter(context);
 }
 
+function readConfig(projectDir) {
+  let configPath = ".microej_check";
+
+  if (process.argv.length == 4) {
+    configPath = process.argv[3];
+  }
+
+  configPath = path.resolve(projectDir, configPath);
+  console.log(`Using configuration file: ${configPath}`);
+
+  // Try reading the configuration file.  
+  try {
+    return getConfiguration(projectDir, configPath);
+  } catch (e) {
+    console.log(`Unable to load configuration file: ${e.message}`);
+    return;
+  }
+}
+
 function main() {
   // Check command line arguments.
   if (process.argv.length < 3 || process.argv.length > 4) {
@@ -38,52 +58,36 @@ function main() {
   }
 
   // Determine configuration file path.
-  const baseDir = process.argv[2];  
-  let configPath = ".microej_check";
+  const config = readConfig(process.argv[2]);
 
-  if (process.argv.length == 4) {
-    configPath = process.argv[3];
-  }
-
-  configPath = path.resolve(baseDir, configPath);
-  console.log(`Using configuration file: ${configPath}`);
-
-  // Try reading the configuration file.  
-  let config;
-  try {
-    config = getConfiguration(baseDir, configPath);
-  } catch (e) {
-    console.log(`Unable to load configuration file: ${e.message}`);
-    return;
-  }
+  // Process the project structure.
+  const baseDir = config.baseDir;
+  const projectStructure = parseJavaProjects(baseDir);
 
   // Start the checkers.
+  const log = new Log();
   const context = {
-    baseDir: config.baseDir
+    projectStructure,
+    baseDir,
+    log
   };
 
-  const poCheckLog = new Log();
-  /*const poCheck = new PoChecker({
-    baseDir: config.baseDir,
-    log: poCheckLog
-  }, config.poCheck);
+  const checks = [
+    new ServiceResourceChecker(context, config.serviceCheck),
+    new PoChecker(context, config.poCheck)
+  ];
 
-  poCheck.startCheck();*/
+  for (const check of checks) {
+    const name = `[${check.getName()}]`;
 
-  const projects = new ServiceResourceChecker({
-    baseDir: config.baseDir,
-    log: poCheckLog
-  }, config.serviceCheck);
-
-  time("[ServiceResourceChecker]");
-  projects.startCheck();
-  timeEnd("[ServiceResourceChecker]");
-
-  //console.log(projects);
+    time(name);
+    check.startCheck();
+    timeEnd(name);
+  }
 
   // Format and display the output.
   const formatter = getFormatter(context);
-  formatter.format(poCheckLog);
+  formatter.format(log);
   formatter.beforeExit();
 }
 
