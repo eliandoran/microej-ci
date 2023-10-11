@@ -1,4 +1,4 @@
-import process from "process";
+import process, { exit } from "process";
 import fs from "fs";
 import path from "path";
 import PoChecker from "../lib/checks/po/po.js";
@@ -46,7 +46,7 @@ function readConfig(projectDir) {
     return getConfiguration(projectDir, configPath);
   } catch (e) {
     console.log(`Unable to load configuration file: ${e.message}`);
-    return;
+    exit(1);
   }
 }
 
