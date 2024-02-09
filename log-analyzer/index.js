@@ -3,7 +3,7 @@ import { parseAntBuildFailures, parseJavadocErrors } from "./parser.js";
 
 const inputFile = 0;
 
-const logRegex = /^.*Z\s*(\[[^\t\n]*\])\s*(.*)$/;
+const logRegex = /^.*?(\[[^\t\n]*\])\s*(.*)$/;
 
 const LOG_ERRORS_ONLY = (process.env.LOG_ANALYZER_LOG_ERRORS_ONLY === "true" || true);
 const BASE_DIR = (process.env.LOG_ANALYZER_BASE_DIR || "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
