@@ -1,9 +1,9 @@
-const fs = require("fs");
+import fs from "fs";
+import { parseAntBuildFailures, parseJavadocErrors } from "./parser.js";
 
 const inputFile = 0;
 
 const logRegex = /^.*Z\s*(\[[^\t\n]*\])\s*(.*)$/;
-const javadocRegex = /^(.*?):(\d+):\s*(.*?)[\s:-]\s*(.*)$/;
 
 const LOG_ERRORS_ONLY = (process.env.LOG_ANALYZER_LOG_ERRORS_ONLY === "true" || true);
 const FILE_REMOVE_PREFIX = (process.env.LOG_ANALYZER_FILE_REMOVE_PREFIX || "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
@@ -36,68 +36,6 @@ function parseLogs(inputFile) {
     }
 
     return byCategory;
-}
-
-function parseJavadocErrors(data) {
-    if (!data) return [];
-    
-    const result = [];
-
-    for (const log of data) {
-        const match = javadocRegex.exec(log);
-        if (!match) {
-            continue;
-        }
-
-        result.push({
-            file: match[1],
-            line: match[2],
-            type: match[3],
-            text: match[4]
-        });
-    }
-
-    return result;
-}
-
-function parseAntBuildFailures(data) {
-    if (!data) return [];
-
-    const failedModuleChain = [];
-    const textLines = [];
-
-    for (let i=0; i<data.length; i++) {
-        if (data[i] === "======================================================================" && i+1<data.length) {
-            const moduleMessage = data[i+1];
-            if (moduleMessage.startsWith("Exiting failing project")) {
-                failedModuleChain.push(data[i+1]);
-            }
-            i+=2;   // skip the text (added at previous step)
-            continue;
-        }
-
-        if (failedModuleChain.length == 0) {
-            continue;
-        }
-
-        if (data[i].startsWith("Total time:")) {
-            break;
-        }
-
-        textLines.push(data[i]);
-    }
-
-    if (textLines.length > 0) {
-        return [
-            {
-                file: `Module: ${failedModuleChain.join("->")}`,
-                type: "error",
-                text: textLines.join("\n")
-            }
-        ];
-    } else {
-        return [];
-    }
 }
 
 function groupLogsByType(logs) {
