@@ -55,8 +55,24 @@ function parseJavadocErrors(data) {
     return result;
 }
 
+function groupLogsByType(logs) {
+    const byType = {};
+
+    for (const log of logs) {
+        const type = log.type;
+        if (!byType[type]) {
+            byType[type] = [];
+        }
+
+        delete log.type;
+        byType[type].push(log);
+    }
+
+    return byType;
+}
+
 const data = parseLogs(inputFile);
-const logs = parseJavadocErrors(data["[java] [microej.javadoc]"]);
+const logs = groupLogsByType(parseJavadocErrors(data["[java] [microej.javadoc]"]));
 
 fs.writeFileSync("debug-output.json", JSON.stringify(data, null, 4));
 fs.writeFileSync("logs.json", JSON.stringify(logs, null, 4));
