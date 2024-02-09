@@ -6,6 +6,11 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+LOG_FILE=input.log
+
 # Execute the given command, preserving its output but also logging to a file
 # for later analysis.
-$@ 2>&1 | tee input.log
+$@ 2>&1 | tee "$LOG_FILE"
+
+# Run the analysis
+cat "$LOG_FILE" | node index.js
