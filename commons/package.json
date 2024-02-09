@@ -1,7 +1,6 @@
 {
   "name": "commons",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -9,5 +8,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "console-table": "^0.1.2",
+    "table": "^6.8.1"
+  },
+  "devDependencies": {},
+  "description": ""
 }

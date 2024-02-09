@@ -1,28 +1,26 @@
 const javadocRegex = /^(.*?):(\d+):\s*(.*?)[\s:-]\s*(.*)$/;
 
-export function parseJavadocErrors(data) {
+export function parseJavadocErrors(log, data) {
     if (!data) return [];
     
     const result = [];
 
-    for (const log of data) {
-        const match = javadocRegex.exec(log);
+    for (const logLine of data) {
+        const match = javadocRegex.exec(logLine);
         if (!match) {
             continue;
         }
 
-        result.push({
-            file: match[1],
-            line: match[2],
-            type: match[3],
-            text: match[4]
+        const [ _, file, line, level, message ] = Array.from(match);
+        log.log(level, message, {
+            file
         });
     }
 
     return result;
 }
 
-export function parseAntBuildFailures(data) {
+export function parseAntBuildFailures(log, data) {
     if (!data) return [];
 
     const failedModuleChain = [];
@@ -50,14 +48,8 @@ export function parseAntBuildFailures(data) {
     }
 
     if (textLines.length > 0) {
-        return [
-            {
-                file: `Module: ${failedModuleChain.join("->")}`,
-                type: "error",
-                text: textLines.join("\n")
-            }
-        ];
-    } else {
-        return [];
+        log.error(textLines.join("\n"), {
+            project: `${failedModuleChain.join("->")}`
+        });
     }
 }

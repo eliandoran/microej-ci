@@ -67,6 +67,10 @@ export default class ConsoleTableLogFormatter {
       return "";
     }
 
+    if (!baseDir) {
+      return logEntry.file;
+    }
+
     const relPath = path.relative(baseDir, logEntry.file);
   
     if (logEntry.line) {
