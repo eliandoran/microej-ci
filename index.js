@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const inputFile = "input/1.txt";
+const inputFile = 0;
 
 const logRegex = /^.*Z\s*(\[[^\t\n]*\])\s*(.*)$/;
 const javadocRegex = /^(.*?):(\d+):\s*(.*?)[\s:-]\s*(.*)$/;
@@ -39,6 +39,8 @@ function parseLogs(inputFile) {
 }
 
 function parseJavadocErrors(data) {
+    if (!data) return [];
+    
     const result = [];
 
     for (const log of data) {
@@ -59,6 +61,8 @@ function parseJavadocErrors(data) {
 }
 
 function parseAntBuildFailures(data) {
+    if (!data) return [];
+
     const failedModuleChain = [];
     const textLines = [];
 
