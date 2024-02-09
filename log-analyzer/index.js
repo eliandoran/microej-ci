@@ -6,7 +6,7 @@ const inputFile = 0;
 const logRegex = /^.*Z\s*(\[[^\t\n]*\])\s*(.*)$/;
 
 const LOG_ERRORS_ONLY = (process.env.LOG_ANALYZER_LOG_ERRORS_ONLY === "true" || true);
-const FILE_REMOVE_PREFIX = (process.env.LOG_ANALYZER_FILE_REMOVE_PREFIX || "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
+const BASE_DIR = (process.env.LOG_ANALYZER_BASE_DIR || "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
 
 import Log from "../commons/logFormatters/log.js";
 import getFormatter from "../commons/logFormatters/index.js";
@@ -52,7 +52,9 @@ function main() {
     fs.writeFileSync("debug-output.json", JSON.stringify(data, null, 4));
 
     // Format and display the output.
-    const formatter = getFormatter({});
+    const formatter = getFormatter({
+        baseDir: BASE_DIR
+    });
     formatter.format(log);
     formatter.beforeExit();
 }
