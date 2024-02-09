@@ -5,6 +5,9 @@ const inputFile = "input/1.txt";
 const logRegex = /^.*Z\s*(\[[^\t\n]*\])\s*(.*)$/;
 const javadocRegex = /^(.*?):(\d+):\s*(.*?)[\s:-]\s*(.*)$/;
 
+const LOG_ERRORS_ONLY = (process.env.LOG_ANALYZER_LOG_ERRORS_ONLY === "true" || true);
+const FILE_REMOVE_PREFIX = (process.env.LOG_ANALYZER_FILE_REMOVE_PREFIX || "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
+
 function parseLogs(inputFile) {
     const byCategory = {};
 
@@ -98,15 +101,31 @@ function groupLogsByType(logs) {
 
     for (const log of logs) {
         const type = log.type;
+
+        if (LOG_ERRORS_ONLY && type !== "error") {
+            console.info(`Skipped ${JSON.stringify(log)}`);
+            continue;
+        }
+
         if (!byType[type]) {
             byType[type] = [];
         }
-
+        
+        log.file = normalizeFilePath(log.file);
         delete log.type;
         byType[type].push(log);
     }
 
     return byType;
+}
+
+function normalizeFilePath(path) {
+    const pos = path.indexOf(FILE_REMOVE_PREFIX);
+    if (pos == 0) {
+        path = path.substr(FILE_REMOVE_PREFIX.length);
+    }
+
+    return path;
 }
 
 const data = parseLogs(inputFile);
