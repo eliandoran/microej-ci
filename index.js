@@ -8,14 +8,20 @@ const lines = fs.readFileSync(inputFile)
     .split("\n")
     .map((line) => {
         const result = logRegex.exec(line);
+
         if (!result) {
             console.info("Skipped ", line);
             return null;
         }
 
+        const [ _, category, log ] = Array.from(result);
+        if (!log) {
+            return null;
+        }
+
         return {
-            category: result[1],
-            log: result[2]
+            category,
+            log
         };
     })
     .filter((e) => e !== null);
