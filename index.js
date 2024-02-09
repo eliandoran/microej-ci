@@ -3,7 +3,7 @@ const fs = require("fs");
 const inputFile = "input/1.txt";
 
 const logRegex = /^.*Z\s*(\[[^\t\n]*\])\s*(.*)$/;
-const javadocRegex = /^(.*?):(\d+):\s*(.*):\s*(.*)$$/;
+const javadocRegex = /^(.*?):(\d+):\s*(.*?)[\s:-]\s*(.*)$/;
 
 function parseLogs(inputFile) {
     const byCategory = {};
