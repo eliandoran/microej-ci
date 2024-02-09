@@ -44,7 +44,8 @@ function parseLogs(inputFile) {
 function main() {
     const data = parseLogs(inputFile);
 
-    const log = new Log();
+    const logLevel = (LOG_ERRORS_ONLY ? [ "error" ] : undefined);
+    const log = new Log(logLevel);
 
     parseAntBuildFailures(log, data["[java]"]),
     parseJavadocErrors(log, data["[java] [microej.javadoc]"])

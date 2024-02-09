@@ -1,10 +1,15 @@
 export default class Log {
 
-  constructor() {
+  constructor(logLevels) {
     this._log = [];
+    this._logLevels = logLevels;
   }
 
   log(level, message, data) {
+    if (this._logLevels && !this._logLevels.includes(level)) {
+      return;
+    }
+
     this._log.push({
       level,
       message,
