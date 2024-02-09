@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+script_dir=$(realpath $(dirname $0))
 
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <command>"
@@ -6,14 +7,15 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-LOG_FILE=input.log
+log_file="$script_dir/input.log"
 
 # Execute the given command, preserving its output but also logging to a file
 # for later analysis.
-"$@" 2>&1 | tee "$LOG_FILE"
+"$@" 2>&1 | tee "$log_file"
 
 exit_code=${PIPESTATUS[0]}
 
 # Run the analysis
-cat "$LOG_FILE" | node index.js
+cd "$script_dir"
+cat "$log_file" | node index.js
 exit $exit_code
