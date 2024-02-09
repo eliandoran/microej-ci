@@ -16,7 +16,9 @@ function parseLogs(inputFile) {
                 return null;
             }
 
-            const [ _, category, log ] = Array.from(result);
+            const category = result[1].replace(/\s+/, " ");
+            const log = result[2];
+
             if (!log) {
                 return null;
             }
