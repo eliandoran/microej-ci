@@ -13,7 +13,8 @@ export function parseJavadocErrors(log, data) {
 
         const [ _, file, line, level, message ] = Array.from(match);
         log.log(level, message, {
-            file
+            file,
+            line
         });
     }
 
