@@ -5,33 +5,34 @@ const inputFile = "input/1.txt";
 const logRegex = /^.*Z\s*(\[[^\t\n]*\])\s*(.*)$/;
 
 function parseLogs(inputFile) {
+    const byCategory = {};
+
     const lines = fs.readFileSync(inputFile)
         .toString("utf-8")
-        .split("\n")
-        .map((line) => {
-            const result = logRegex.exec(line);
+        .split("\n");
 
-            if (!result) {
-                console.info("Skipped ", line);
-                return null;
-            }
+    for (const line of lines) {
+        const result = logRegex.exec(line);
 
-            const category = result[1].replace(/\s+/, " ");
-            const log = result[2];
+        if (!result) {
+            console.info("Skipped ", line);
+            continue;
+        }
 
-            if (!log) {
-                return null;
-            }
+        const category = result[1].replace(/\s+/, " ");
+        const log = result[2];
 
-            return {
-                category,
-                log
-            };
-        })
-        .filter((e) => e !== null);    
-    return lines;
+        if (!log) continue;
+
+        if (!byCategory[category]) {
+            byCategory[category] = [];
+        }
+
+        byCategory[category].push(log);
+    }
+
+    return byCategory;
 }
 
-
 const output = parseLogs(inputFile);
-fs.writeFileSync("output.json", JSON.stringify(output, null, 4));
+fs.writeFileSync("debug-output.json", JSON.stringify(output, null, 4));
