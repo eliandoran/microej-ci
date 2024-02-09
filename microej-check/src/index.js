@@ -2,8 +2,7 @@ import process, { exit } from "process";
 import fs from "fs";
 import path from "path";
 import Log from "../../commons/logFormatters/log.js";
-import ConsoleTableLogFormatter from "../../commons/logFormatters/console-table.js";
-import GitHubWorkflowFormatter from "../../commons/logFormatters/github-workflow.js";
+import getFormatter from "../../commons/logFormatters/index.js";
 
 import PoChecker from "../lib/checks/po/index.js";
 import ServiceResourceChecker from "../lib/checks/services/index.js";
@@ -21,16 +20,6 @@ function getConfiguration(baseDir, configPath) {
 function showUsage() {
   console.info("MicroEJ Checker");
   console.info(`Usage: ${process.argv[0]} ${process.argv[1]} project_directory [config_file]`);
-}
-
-function getFormatter(context) {
-  // If running under GitHub Actions, use the corresponding format.
-  if (process.env["GITHUB_RUN_ID"]) {
-    return new GitHubWorkflowFormatter(context);
-  }
-
-  // Otherwise, use the more friendlier console version.
-  return new ConsoleTableLogFormatter(context);
 }
 
 function readConfig(projectDir) {
