@@ -1,3 +1,4 @@
 input
 debug-output.json
 logs.json
+*.log
