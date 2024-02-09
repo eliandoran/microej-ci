@@ -55,6 +55,44 @@ function parseJavadocErrors(data) {
     return result;
 }
 
+function parseAntBuildFailures(data) {
+    const failedModuleChain = [];
+    const textLines = [];
+
+    for (let i=0; i<data.length; i++) {
+        if (data[i] === "======================================================================" && i+1<data.length) {
+            const moduleMessage = data[i+1];
+            if (moduleMessage.startsWith("Exiting failing project")) {
+                failedModuleChain.push(data[i+1]);
+            }
+            i+=2;   // skip the text (added at previous step)
+            continue;
+        }
+
+        if (failedModuleChain.length == 0) {
+            continue;
+        }
+
+        if (data[i].startsWith("Total time:")) {
+            break;
+        }
+
+        textLines.push(data[i]);
+    }
+
+    if (textLines.length > 0) {
+        return [
+            {
+                file: `Module: ${failedModuleChain.join("->")}`,
+                type: "error",
+                text: textLines.join("\n")
+            }
+        ];
+    } else {
+        return [];
+    }
+}
+
 function groupLogsByType(logs) {
     const byType = {};
 
@@ -72,7 +110,11 @@ function groupLogsByType(logs) {
 }
 
 const data = parseLogs(inputFile);
-const logs = groupLogsByType(parseJavadocErrors(data["[java] [microej.javadoc]"]));
+
+const logs = groupLogsByType([
+    ...parseAntBuildFailures(data["[java]"]),
+    ...parseJavadocErrors(data["[java] [microej.javadoc]"])
+]);
 
 fs.writeFileSync("debug-output.json", JSON.stringify(data, null, 4));
 fs.writeFileSync("logs.json", JSON.stringify(logs, null, 4));
