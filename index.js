@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const inputFile = "input/1.txt";
 
-const logRegex = /^.*Z\s*(\[.*\])\s*(.*)$/;
+const logRegex = /^.*Z\s*(\[[^\t\n]*\])\s*(.*)$/;
 
 function parseLogs(inputFile) {
     const lines = fs.readFileSync(inputFile)
