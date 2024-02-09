@@ -3,27 +3,33 @@ const fs = require("fs");
 const inputFile = "input/1.txt";
 
 const logRegex = /^.*Z\s*(\[.*\])\s*(.*)$/;
-const lines = fs.readFileSync(inputFile)
-    .toString("utf-8")
-    .split("\n")
-    .map((line) => {
-        const result = logRegex.exec(line);
 
-        if (!result) {
-            console.info("Skipped ", line);
-            return null;
-        }
+function parseLogs(inputFile) {
+    const lines = fs.readFileSync(inputFile)
+        .toString("utf-8")
+        .split("\n")
+        .map((line) => {
+            const result = logRegex.exec(line);
 
-        const [ _, category, log ] = Array.from(result);
-        if (!log) {
-            return null;
-        }
+            if (!result) {
+                console.info("Skipped ", line);
+                return null;
+            }
 
-        return {
-            category,
-            log
-        };
-    })
-    .filter((e) => e !== null);
+            const [ _, category, log ] = Array.from(result);
+            if (!log) {
+                return null;
+            }
 
-const output = fs.writeFileSync("output.json", JSON.stringify(lines, null, 4));
+            return {
+                category,
+                log
+            };
+        })
+        .filter((e) => e !== null);    
+    return lines;
+}
+
+
+const output = parseLogs(inputFile);
+fs.writeFileSync("output.json", JSON.stringify(output, null, 4));
