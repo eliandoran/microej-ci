@@ -3,6 +3,7 @@ const fs = require("fs");
 const inputFile = "input/1.txt";
 
 const logRegex = /^.*Z\s*(\[[^\t\n]*\])\s*(.*)$/;
+const javadocRegex = /^(.*?):(\d+):\s*(.*):\s*(.*)$$/;
 
 function parseLogs(inputFile) {
     const byCategory = {};
@@ -34,5 +35,28 @@ function parseLogs(inputFile) {
     return byCategory;
 }
 
-const output = parseLogs(inputFile);
-fs.writeFileSync("debug-output.json", JSON.stringify(output, null, 4));
+function parseJavadocErrors(data) {
+    const result = [];
+
+    for (const log of data) {
+        const match = javadocRegex.exec(log);
+        if (!match) {
+            continue;
+        }
+
+        result.push({
+            file: match[1],
+            line: match[2],
+            type: match[3],
+            text: match[4]
+        });
+    }
+
+    return result;
+}
+
+const data = parseLogs(inputFile);
+const logs = parseJavadocErrors(data["[java] [microej.javadoc]"]);
+
+fs.writeFileSync("debug-output.json", JSON.stringify(data, null, 4));
+fs.writeFileSync("logs.json", JSON.stringify(logs, null, 4));
