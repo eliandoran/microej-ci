@@ -1,9 +1,9 @@
 import process, { exit } from "process";
 import fs from "fs";
 import path from "path";
-import Log from "../lib/log.js";
-import ConsoleTableLogFormatter from "../lib/logFormatters/console-table.js";
-import GitHubWorkflowFormatter from "../lib/logFormatters/github-workflow.js";
+import Log from "../../commons/logFormatters/log.js";
+import ConsoleTableLogFormatter from "../../commons/logFormatters/console-table.js";
+import GitHubWorkflowFormatter from "../../commons/logFormatters/github-workflow.js";
 
 import PoChecker from "../lib/checks/po/index.js";
 import ServiceResourceChecker from "../lib/checks/services/index.js";
