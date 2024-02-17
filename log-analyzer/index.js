@@ -1,5 +1,5 @@
 import fs from "fs";
-import { parseAntBuildFailures, parseJavadocErrors } from "./parser.js";
+import { parseAntBuildFailures, parseJavadocErrors, parseSoarBuildErrors } from "./parser.js";
 
 const inputFile = 0;
 
@@ -26,7 +26,7 @@ function parseLogs(inputFile) {
             continue;
         }
 
-        const category = result[1].replace(/\s+/, " ");
+        const category = result[1].replace(/\s+/g, " ");
         const log = result[2];
 
         if (!log) continue;
@@ -36,6 +36,14 @@ function parseLogs(inputFile) {
         }
 
         byCategory[category].push(log);
+
+        // Special treatment, for multiple categories append them to the base category as well.
+        const categoryComponents = category.match(/\[\w+\]/g);
+        if (categoryComponents && categoryComponents.length > 1) {
+            const firstCategory = categoryComponents[0];
+            if (!byCategory[firstCategory]) byCategory[firstCategory] = [];
+            byCategory[firstCategory].push(log);
+        }
     }
 
     return byCategory;
@@ -47,8 +55,9 @@ function main() {
     const logLevel = (LOG_ERRORS_ONLY ? [ "error" ] : undefined);
     const log = new Log(logLevel);
 
-    parseAntBuildFailures(log, data["[java]"]),
-    parseJavadocErrors(log, data["[java] [microej.javadoc]"])
+    parseAntBuildFailures(log, data["[java]"]);
+    parseSoarBuildErrors(log, data["[java]"]);
+    parseJavadocErrors(log, data["[java] [microej.javadoc]"]);
 
     fs.writeFileSync("debug-output.json", JSON.stringify(data, null, 4));
 

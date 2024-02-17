@@ -54,3 +54,30 @@ export function parseAntBuildFailures(log, data) {
         });
     }
 }
+
+export function parseSoarBuildErrors(log, data) {
+    if (!data) {
+        return;
+    }
+
+    let foundMarker = false;
+    const textLines = [];
+    for (const line of data) {
+        if (!foundMarker && line.includes("SOAR ERROR")) {
+            foundMarker = true;
+            continue;
+        }
+
+        if (foundMarker) {            
+            textLines.push(line);
+
+            if (line.startsWith("Total time:")) {
+                break;
+            }
+        }
+    }
+
+    if (textLines.length > 0) {
+        log.error(textLines.join("\n"));
+    }
+}
