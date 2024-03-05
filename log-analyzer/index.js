@@ -26,7 +26,10 @@ function parseLogs(inputFile) {
             continue;
         }
 
-        const category = result[1].replace(/\s+/g, " ");
+        const category = result[1]
+            .replace(/\s+/g, " ")
+            // we remove [java] tag since it's added only on older versions of MicroEJ
+            .replace(/^[java]/g, "");
         const log = result[2];
 
         if (!log) continue;
@@ -55,9 +58,9 @@ function main() {
     const logLevel = (LOG_ERRORS_ONLY ? [ "error" ] : undefined);
     const log = new Log(logLevel);
 
-    parseAntBuildFailures(log, data["[java]"]);
-    parseSoarBuildErrors(log, data["[java]"]);
-    parseJavadocErrors(log, data["[java] [microej.javadoc]"]);
+    parseAntBuildFailures(log, data[""]);
+    parseSoarBuildErrors(log, data[""]);
+    parseJavadocErrors(log, data["[microej.javadoc]"]);
 
     fs.writeFileSync("debug-output.json", JSON.stringify(data, null, 4));
 
