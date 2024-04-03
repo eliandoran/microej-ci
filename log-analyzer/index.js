@@ -6,8 +6,23 @@ const inputFile = 0;
 const logRegex = /^.*?(\[[^\t\n]*\])\s*(.*)$/;
 const timestampRegex = /^\d{4}-\d{2}-\d{2}/;
 
-const LOG_ERRORS_ONLY = (process.env.LOG_ANALYZER_LOG_ERRORS_ONLY === "true" || true);
-const BASE_DIR = (process.env.LOG_ANALYZER_BASE_DIR || "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
+const LOG_ERRORS_ONLY = getBooleanEnv("LOG_ANALYZER_LOG_ERRORS_ONLY", true);
+const BASE_DIR = getStringEnv("LOG_ANALYZER_BASE_DIR", "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
+
+function getStringEnv(name, defaultValue) {
+    const value = process.env[name];
+
+    if (process.env[name]) {
+        return process.env[name];
+    }
+
+    return defaultValue;
+}
+
+function getBooleanEnv(name, defaultValue) {
+    const value = getStringEnv(name, defaultValue);
+    return (value.toLowerCase() === "true");
+}
 
 import Log from "../commons/logFormatters/log.js";
 import getFormatter from "../commons/logFormatters/index.js";
