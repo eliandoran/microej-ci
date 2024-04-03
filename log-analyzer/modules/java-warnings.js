@@ -15,7 +15,14 @@ export function processJavaWarnings(log, allLogs) {
             continue;
 
 
+        // The first line of the warning contains most information.
         const [ _, type, file, lineNumber ] = match;
         console.log(type, file, lineNumber);
+
+        // The actual message is in the last line before ----------.
+        const lastLineIndex = allLogs.indexOf("----------", i);
+        if (lastLineIndex === -1) continue;
+        const message = allLogs[lastLineIndex - 1];
+        console.log(message);
     }
 }
