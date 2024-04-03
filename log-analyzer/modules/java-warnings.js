@@ -10,19 +10,23 @@ export function processJavaWarnings(log, allLogs) {
     for (let i=0; i<allLogs.length; i++) {
         const line = allLogs[i];
         const match = warningRegex.exec(line);
-
-        if (!match)
-            continue;
+        if (!match) continue;
 
 
         // The first line of the warning contains most information.
-        const [ _, type, file, lineNumber ] = match;
-        console.log(type, file, lineNumber);
+        const [ _, level, file, lineNumber ] = match;
 
         // The actual message is in the last line before ----------.
         const lastLineIndex = allLogs.indexOf("----------", i);
         if (lastLineIndex === -1) continue;
         const message = allLogs[lastLineIndex - 1];
-        console.log(message);
+
+        if (!message) continue;
+
+        // Log the warning.
+        log.log("warning", message, {
+            file,
+            lineNumber
+        });
     }
 }
