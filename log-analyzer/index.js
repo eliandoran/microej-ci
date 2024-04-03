@@ -10,6 +10,7 @@ const BASE_DIR = (process.env.LOG_ANALYZER_BASE_DIR || "/__w/EMB-IHM_JAVA/EMB-IH
 
 import Log from "../commons/logFormatters/log.js";
 import getFormatter from "../commons/logFormatters/index.js";
+import { processJavaWarnings } from "./modules/java-warnings.js";
 
 function parseLogs(inputFile) {
     const byCategory = {};
@@ -18,19 +19,26 @@ function parseLogs(inputFile) {
         .toString("utf-8")
         .split("\n");
 
-    for (const line of lines) {
-        const result = logRegex.exec(line);
-
-        if (!result) {
-            console.info("Skipped ", line);
-            continue;
+    for (let line of lines) {
+        // Remove timestamp from the logs if present.
+        if (timestampRegex.exec(line)) {
+            line = line.substring(line.indexOf(" ") + 1);
         }
 
-        const category = result[1]
+        const result = logRegex.exec(line);
+
+        let category;
+        let log;
+        if (result) {
+            category = result[1]
             .replace(/\s+/g, " ")
             // we remove [java] tag since it's added only on older versions of MicroEJ
             .replace(/^[java]/g, "");
-        const log = result[2];
+            log = result[2];
+        } else {
+            category = "";
+            log = line;
+        }
 
         if (!log) continue;
 
