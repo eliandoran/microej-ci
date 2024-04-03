@@ -66,9 +66,7 @@ function main() {
     const logLevel = (LOG_ERRORS_ONLY ? [ "error" ] : undefined);
     const log = new Log(logLevel);
 
-    parseAntBuildFailures(log, data[""]);
-    parseSoarBuildErrors(log, data[""]);
-    parseJavadocErrors(log, data["[microej.javadoc]"]);
+    processJavaWarnings(log, data[""]);
 
     fs.writeFileSync("debug-output.json", JSON.stringify(data, null, 4));
 
