@@ -4,6 +4,7 @@ import { parseAntBuildFailures, parseJavadocErrors, parseSoarBuildErrors } from 
 const inputFile = 0;
 
 const logRegex = /^.*?(\[[^\t\n]*\])\s*(.*)$/;
+const timestampRegex = /^\d{4}-\d{2}-\d{2}/;
 
 const LOG_ERRORS_ONLY = (process.env.LOG_ANALYZER_LOG_ERRORS_ONLY === "true" || true);
 const BASE_DIR = (process.env.LOG_ANALYZER_BASE_DIR || "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
