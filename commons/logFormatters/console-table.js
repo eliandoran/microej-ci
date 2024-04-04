@@ -5,9 +5,12 @@ export default class ConsoleTableLogFormatter {
 
   constructor(context) {
     this.context = context;
+    this.numErrors = 0;
   }
 
   format(log) {
+    this.numErrors = 0;
+
     const data = [];
     data.push([
       "#",
@@ -19,6 +22,10 @@ export default class ConsoleTableLogFormatter {
     let index = 1;
     const groupedLogs = this._groupData(log);
     for (const entry of groupedLogs) {
+      if (entry.level == "error") {
+        this.numErrors++;
+      }
+
       data.push([
         index++,
         formatLogLevel(entry.level),
@@ -32,7 +39,9 @@ export default class ConsoleTableLogFormatter {
   }
 
   beforeExit() {
-    // No action needed.
+    if (this.numErrors > 0) {
+      process.exit(1);
+    }
   }
 
   _groupData(log) {
