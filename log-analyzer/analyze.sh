@@ -19,12 +19,13 @@ build_exit_code=${PIPESTATUS[0]}
 cd "$script_dir"
 cat "$log_file" | node index.js
 analysis_exit_code=${PIPESTATUS[1]}
-echo $build_exit_code $analysis_exit_code
 
 if [ $build_exit_code -ne 0 ]; then
+    echo Failing because the build has failed.
     exit $build_exit_code
 fi
 
 if [ $analysis_exit_code -ne 0 ]; then
+    echo Failing because the analysis has failed or found errors. 
     exit $analysis_exit_code
 fi
