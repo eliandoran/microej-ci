@@ -22,7 +22,8 @@ function getStringEnv(name, defaultValue) {
 
 function getBooleanEnv(name, defaultValue) {
     const value = getStringEnv(name, defaultValue);
-    return (value && value.toLowerCase() === "true");
+    if (value === "string") value = value.toLowerCase();
+    return (value && value === "true");
 }
 
 import Log from "../commons/logFormatters/log.js";

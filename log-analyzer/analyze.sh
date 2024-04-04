@@ -13,9 +13,18 @@ log_file="$script_dir/input.log"
 # for later analysis.
 "$@" 2>&1 | tee "$log_file"
 
-exit_code=${PIPESTATUS[0]}
+build_exit_code=${PIPESTATUS[0]}
 
 # Run the analysis
 cd "$script_dir"
 cat "$log_file" | node index.js
-exit $exit_code
+analysis_exit_code=${PIPESTATUS[1]}
+echo $build_exit_code $analysis_exit_code
+
+if [ $build_exit_code -ne 0 ]; then
+    exit $build_exit_code
+fi
+
+if [ $analysis_exit_code -ne 0 ]; then
+    exit $analysis_exit_code
+fi

@@ -49,7 +49,7 @@ export default class GitHubWorkflowFormatter {
 
   beforeExit() {
     if (this.numErrors > 0) {
-      process.exit(-this.numErrors);
+      process.exit(1);
     }
   }
 
