@@ -1,11 +1,16 @@
 export default class Log {
 
-  constructor(logLevels) {
+  constructor(logLevels, warningsAsErrors) {
     this._log = [];
     this._logLevels = logLevels;
+    this.warningsAsErrors = warningsAsErrors;
   }
 
   log(level, message, data) {
+    if (this.warningsAsErrors && level === "warning") {
+      level = "error";
+    }
+
     if (this._logLevels && !this._logLevels.includes(level)) {
       return;
     }

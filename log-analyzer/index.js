@@ -7,6 +7,7 @@ const logRegex = /^.*?(\[[^\t\n]*\])\s*(.*)$/;
 const timestampRegex = /^\d{4}-\d{2}-\d{2}/;
 
 const LOG_ERRORS_ONLY = getBooleanEnv("LOG_ANALYZER_LOG_ERRORS_ONLY", true);
+const TREAT_WARNINGS_AS_ERRORS = getBooleanEnv("LOG_ANALYZER_WARNINGS_AS_ERRORS", false);
 const BASE_DIR = getStringEnv("LOG_ANALYZER_BASE_DIR", "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
 
 function getStringEnv(name, defaultValue) {
@@ -21,7 +22,7 @@ function getStringEnv(name, defaultValue) {
 
 function getBooleanEnv(name, defaultValue) {
     const value = getStringEnv(name, defaultValue);
-    return (value.toLowerCase() === "true");
+    return (value && value.toLowerCase() === "true");
 }
 
 import Log from "../commons/logFormatters/log.js";
@@ -80,7 +81,7 @@ function main() {
     const data = parseLogs(inputFile);
 
     const logLevel = (LOG_ERRORS_ONLY ? [ "error" ] : undefined);
-    const log = new Log(logLevel);
+    const log = new Log(logLevel, TREAT_WARNINGS_AS_ERRORS);
 
     processJavaWarnings(log, data[""]);
 
