@@ -1,5 +1,5 @@
 import table from "table";
-import path from "path";
+import { groupLogsByFile } from "./common.js";
 
 export default class ConsoleTableLogFormatter {
 
@@ -20,7 +20,7 @@ export default class ConsoleTableLogFormatter {
     ]);
 
     let index = 1;
-    const groupedLogs = this._groupData(log);
+    const groupedLogs = groupLogsByFile(log, this.context.baseDir);
     for (const entry of groupedLogs) {
       if (entry.level == "error") {
         this.numErrors++;
@@ -41,51 +41,6 @@ export default class ConsoleTableLogFormatter {
   beforeExit() {
     if (this.numErrors > 0) {
       process.exit(1);
-    }
-  }
-
-  _groupData(log) {
-    const groupedData = {};
-    for (const entry of log._log) {
-      const { level, message } = entry;      
-      const file = this._formatFileNameWithLine(entry);
-
-      if (!groupedData[message]) {
-        groupedData[message] = {
-          level,
-          message,
-          files: [ file ]
-        }
-      } else {
-        groupedData[message].files.push(file);
-
-        // Remove possible duplicates.
-        if (groupedData[message].files.length > 1) {
-          groupedData[message].files = Array.from(new Set(groupedData[message].files));
-        }
-      }
-    }
-
-    return Object.values(groupedData);
-  }
-
-  _formatFileNameWithLine(logEntry) {
-    const baseDir = this.context.baseDir;
-
-    if (!logEntry.file) {
-      return "";
-    }
-
-    if (!baseDir) {
-      return logEntry.file;
-    }
-
-    const relPath = path.relative(baseDir, logEntry.file);
-  
-    if (logEntry.line) {
-      return `${relPath}:${logEntry.line}`; 
-    } else {
-      return `${relPath}`;
     }
   }
 
