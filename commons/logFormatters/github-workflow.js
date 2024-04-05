@@ -1,4 +1,5 @@
 import path from "path";
+import fs from "fs";
 
 const LOG_LEVEL_MAPPINGS = {
   "error": "error",
@@ -16,6 +17,11 @@ export default class GitHubWorkflowFormatter {
   format(log) {
     this.numErrors = 0;
 
+    this.#generateAnnotations(log);
+    this.#generateSummary(log);
+  }
+
+  #generateAnnotations(log) {
     for (const entry of log._log) {
       const logLevel = LOG_LEVEL_MAPPINGS[entry.level] || LOG_LEVEL_MAPPINGS["info"];
       const file = entry.file;
@@ -29,6 +35,17 @@ export default class GitHubWorkflowFormatter {
         this.numErrors++;
       }
     }
+  }
+
+  #generateSummary(log) {
+    const summaryFilePath = process.env["GITHUB_STEP_SUMMARY"];
+    if (!summaryFilePath) {
+      return;
+    }
+
+    const summary = [];
+
+    fs.writeFileSync(summaryFilePath, summary.join("\n"));
   }
 
   _formatFileNameWithLine(logEntry) {
