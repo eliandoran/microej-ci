@@ -17,11 +17,11 @@ export default class GitHubWorkflowFormatter {
   format(log) {
     this.numErrors = 0;
 
-    this.#generateAnnotations(log);
+    this.generateAnnotations(log);
     generateSummary(log, this.context);
   }
 
-  #generateAnnotations(log) {
+  generateAnnotations(log) {
     for (const entry of log._log) {
       const logLevel = LOG_LEVEL_MAPPINGS[entry.level] || LOG_LEVEL_MAPPINGS["info"];
       const file = entry.file;
