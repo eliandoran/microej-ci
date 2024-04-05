@@ -30,6 +30,7 @@ export function generateSummary(log, context) {
 
 function listLogs(logs) {
     const output = [];
+    output.push("");
     for (const log of logs) {
         output.push(`1. ${log.message}`);
 
@@ -37,6 +38,8 @@ function listLogs(logs) {
             output.push(`\t- ${file}`);
         }
     }
+    output.push("");
+
     return output;
 }
 
