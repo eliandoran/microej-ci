@@ -26,7 +26,7 @@ export function processJavaWarnings(log, allLogs) {
         // Log the warning.
         log.log("warning", message, {
             file,
-            lineNumber
+            line: lineNumber
         });
     }
 }
