@@ -20,7 +20,8 @@ export function generateSummary(log, context) {
     }
 
     let summary = [];
-    for (const logsByLevel of Object.values(byLevel)) {
+    for (const [ level, logsByLevel ] of Object.entries(byLevel)) {
+        summary.push(getHeaderForErrorLevel(level, logsByLevel.length));
         summary.push(listLogs(logsByLevel));
     }
 
@@ -37,4 +38,19 @@ function listLogs(logs) {
         }
     }
     return output;
+}
+
+function getHeaderForErrorLevel(level, count) {
+    switch (level) {
+        case "error":
+            return `## :x: ${count} ${formatPlural(count, "Error", "Errors")}`;
+        case "warning":
+            return `## :heavy_exclamation_mark: ${count} ${formatPlural(count, "Warning", "Warnings")}`;
+        default:
+            return `## ${level}`;
+    }
+}
+
+function formatPlural(count, singular, plural) {
+    return (count == 1 ? singular : plural);
 }
