@@ -7,7 +7,6 @@ export function generateSummary(log, context) {
         return;
     }
 
-    const summary = [];
     const groupedLogs = groupLogsByFile(log, context.baseDir);
 
     // Further group the logs by level.
@@ -20,5 +19,18 @@ export function generateSummary(log, context) {
         byLevel[log.level].push(log);
     }
 
-    fs.writeFileSync(summaryFilePath, summary.join("\n"));
+    let summary = [];
+    for (const logsByLevel of Object.values(byLevel)) {
+        summary.push(listLogs(logsByLevel));
+    }
+
+    fs.writeFileSync(summaryFilePath, summary.flat().join("\n"));
+}
+
+function listLogs(logs) {
+    const output = [];
+    for (const log of logs) {
+        output.push(` - ${log.message}`);
+    }
+    return output;
 }
