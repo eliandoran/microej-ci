@@ -31,6 +31,10 @@ function listLogs(logs) {
     const output = [];
     for (const log of logs) {
         output.push(` - ${log.message}`);
+
+        for (const file of log.files) {
+            output.push(`\t- ${file}`);
+        }
     }
     return output;
 }
