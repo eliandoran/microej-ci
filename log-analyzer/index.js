@@ -8,7 +8,7 @@ const timestampRegex = /^\d{4}-\d{2}-\d{2}/;
 
 const LOG_ERRORS_ONLY = getBooleanEnv("LOG_ANALYZER_LOG_ERRORS_ONLY", true);
 const TREAT_WARNINGS_AS_ERRORS = getBooleanEnv("LOG_ANALYZER_WARNINGS_AS_ERRORS", false);
-const BASE_DIR = getStringEnv("LOG_ANALYZER_BASE_DIR", "/__w/EMB-IHM_JAVA/EMB-IHM_JAVA/");
+const BASE_DIR = getStringEnv("LOG_ANALYZER_BASE_DIR", getStringEnv("GITHUB_WORKSPACE", ""));
 
 function getStringEnv(name, defaultValue) {
     const value = process.env[name];
